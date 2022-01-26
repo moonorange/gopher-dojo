@@ -3,11 +3,21 @@ package main
 import (
 	"flag"
 	"fmt"
+	"image"
+	_ "image/jpeg"
+	_ "image/png"
 	"os"
 	"path/filepath"
 
 	"moonorange/converter"
 )
+
+func errHandle(err error) {
+	if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+	}
+}
 
 func main() {
 	var (
@@ -29,10 +39,13 @@ func main() {
 		if info.IsDir() {
 			return nil
 		}
-		err = converter.Do(*srcDir, *dstDir, *fromExt, *toExt, path)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+		file, err := os.Open(path)
+		errHandle(err)
+
+		_, format, _ := image.DecodeConfig(file)
+		if format == "jpeg" || format == "png" {
+			err = converter.Do(*srcDir, *dstDir, *fromExt, *toExt, path, format)
+			errHandle(err)
 		}
 		return nil
 	})

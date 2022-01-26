@@ -5,7 +5,7 @@ import (
 )
 
 
-func Do(srcDir, dstDir, fromExt, toExt, path string) error {
-	fmt.Println(srcDir, dstDir, fromExt, toExt, path)
+func Do(srcDir, dstDir, fromExt, toExt, path, format string) error {
+	fmt.Println(srcDir, dstDir, fromExt, toExt, path, format)
 	return nil
 }
