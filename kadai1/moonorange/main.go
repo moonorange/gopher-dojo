@@ -2,6 +2,9 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"os"
+	"path/filepath"
 
 	"moonorange/converter"
 )
@@ -16,5 +19,21 @@ func main() {
 
 	// To parse the command line into the defined flags.
 	flag.Parse()
-	converter.Do(*srcDir, *dstDir, *fromExt, *toExt)
+
+	filepath.Walk(*srcDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+		err = converter.Do(*srcDir, *dstDir, *fromExt, *toExt, path)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		return nil
+	})
 }
