@@ -27,16 +27,13 @@ func Do(dstDir, fromExt, toExt, path, format string, img image.Image) error {
 
 	switch toExt {
 	case "jpg":
-		if format != "jpeg" {
-			if err := jpeg.Encode(newf, img,  &jpeg.Options{Quality: 75}); err != nil {
-				return err
-			}
+		if err := jpeg.Encode(newf, img,  &jpeg.Options{Quality: 75}); err != nil {
+			return err
 		}
 	case "png":
-		if format != "png" {
-			if err := png.Encode(newf, img); err != nil {
-				return err
-			}
+		err := png.Encode(newf, img)
+		if err != nil {
+			return err
 		}
 	}
 	return nil
