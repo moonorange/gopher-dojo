@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"image"
@@ -19,6 +20,22 @@ func errHandle(err error) {
 	}
 }
 
+var availFmt = map[string]bool {
+	"jpeg" : true,
+	"jpg" : true,
+	"png" : true,
+}
+
+func chkAvailFmt(fromExt, toExt string) error {
+	if !availFmt[fromExt] {
+		return errors.New("invalid input file extension " + fromExt)
+	}
+	if !availFmt[toExt] {
+		return errors.New("invalid output file extension " + toExt)
+	}
+	return nil
+}
+
 func main() {
 	var (
 		srcDir  = flag.String("src", ".", "Directory of images that you want to convert")
@@ -27,13 +44,10 @@ func main() {
 		toExt   = flag.String("to", "png", "Extension after conversion")
 	)
 
-	availFmt := map[string]bool {
-		"jpeg" : true,
-		"png" : true,
-	}
-
 	// To parse the command line into the defined flags.
 	flag.Parse()
+	err := chkAvailFmt(*fromExt, *toExt)
+	errHandle(err)
 
 	filepath.Walk(*srcDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
