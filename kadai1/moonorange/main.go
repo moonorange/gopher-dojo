@@ -27,6 +27,11 @@ func main() {
 		toExt   = flag.String("to", "png", "Extension after conversion")
 	)
 
+	availFmt := map[string]bool {
+		"jpeg" : true,
+		"png" : true,
+	}
+
 	// To parse the command line into the defined flags.
 	flag.Parse()
 
@@ -39,12 +44,14 @@ func main() {
 		if info.IsDir() {
 			return nil
 		}
+		// Open file and decode it to image.Image
 		file, err := os.Open(path)
 		errHandle(err)
+		defer file.Close()
 
-		_, format, _ := image.DecodeConfig(file)
-		if format == "jpeg" || format == "png" {
-			err = converter.Do(*srcDir, *dstDir, *fromExt, *toExt, path, format)
+		img, format, err := image.Decode(file)
+		if availFmt[format] && err == nil {
+			err = converter.Do(*dstDir, *fromExt, *toExt, path, format, img)
 			errHandle(err)
 		}
 		return nil
