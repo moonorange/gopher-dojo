@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 	"image"
@@ -28,10 +27,12 @@ var availFmt = map[string]bool {
 
 func chkAvailFmt(fromExt, toExt string) error {
 	if !availFmt[fromExt] {
-		return errors.New("invalid input file extension " + fromExt)
+		err :=  fmt.Errorf("invalid input file extension %s", fromExt)
+		return err
 	}
 	if !availFmt[toExt] {
-		return errors.New("invalid output file extension " + toExt)
+		err :=  fmt.Errorf("invalid input file extension %s", toExt)
+		return err
 	}
 	return nil
 }
