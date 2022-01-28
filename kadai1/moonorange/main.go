@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"image"
@@ -33,6 +34,9 @@ func chkAvailFmt(fromExt, toExt string) error {
 	if !availFmt[toExt] {
 		err :=  fmt.Errorf("invalid input file extension %s", toExt)
 		return err
+	}
+	if fromExt == toExt {
+		return errors.New("from and to ext should be different from each other")
 	}
 	return nil
 }
