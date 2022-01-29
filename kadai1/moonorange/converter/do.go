@@ -10,8 +10,8 @@ import (
 )
 
 func Do(dstDir, fromExt, toExt, path, format string, img image.Image) error {
-	if err := os.MkdirAll("?&A", 0777); err != nil {
-		return &ConvError{Err: err, Code: DirCreateFail, FilePath: "?&A"}
+	if err := os.MkdirAll(dstDir, 0777); err != nil {
+		return &ConvError{Err: err, Code: DirCreateFail, FilePath: dstDir}
 	}
 	newfn := filepath.Join(dstDir, filepath.Base(fnWithoutExt(path) + "." + toExt))
 	newf, err := os.Create(newfn)
