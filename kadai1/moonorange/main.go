@@ -59,7 +59,7 @@ func main() {
 	err := chkAvailFmt(*fromExt, *toExt)
 	errHandle(err)
 
-	filepath.Walk(*srcDir, func(path string, info os.FileInfo, err error) error {
+	err = filepath.Walk(*srcDir, func(path string, info os.FileInfo, err error) error {
 		errHandle(err)
 
 		if info.IsDir() {
@@ -77,4 +77,5 @@ func main() {
 		}
 		return nil
 	})
+	errHandle(err)
 }

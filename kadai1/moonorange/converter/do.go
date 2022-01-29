@@ -31,8 +31,7 @@ func Do(dstDir, fromExt, toExt, path, format string, img image.Image) error {
 			return err
 		}
 	case "png":
-		err := png.Encode(newf, img)
-		if err != nil {
+		if err := png.Encode(newf, img); err!= nil {
 			return err
 		}
 	}
