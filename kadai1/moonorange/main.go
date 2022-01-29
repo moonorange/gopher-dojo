@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 	"image"
@@ -41,7 +40,7 @@ func chkAvailFmt(fromExt, toExt string) error {
 		err =  fmt.Errorf("invalid file extension. supported format is " + strings.Join(keys(availFmt), " "))
 	}
 	if fromExt == toExt {
-		err = errors.New("from and to flag value should be different from each other")
+		err = fmt.Errorf("from and to flag value should be different from each other. from:%s to:%s", fromExt, toExt)
 	}
 	return err
 }
