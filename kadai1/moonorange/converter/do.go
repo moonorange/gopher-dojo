@@ -30,10 +30,12 @@ func Do(dstDir, fromExt, toExt, path, format string, img image.Image) error {
 		if err := jpeg.Encode(newf, img,  nil); err != nil {
 			return &ConvError{Err: err, Code: FileEncodeFail, FilePath: newfn}
 		}
+		fmt.Println("Created", newfn)
 	case "png":
 		if err := png.Encode(newf, img); err!= nil {
 			return &ConvError{Err: err, Code: FileEncodeFail, FilePath: newfn}
 		}
+		fmt.Println("Created", newfn)
 	}
 	return nil
 }
