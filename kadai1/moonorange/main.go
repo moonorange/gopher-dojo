@@ -9,6 +9,7 @@ import (
 	_ "image/png"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"moonorange/converter"
 )
@@ -26,19 +27,23 @@ var availFmt = map[string]bool {
 	"png" : true,
 }
 
-func chkAvailFmt(fromExt, toExt string) error {
-	if !availFmt[fromExt] {
-		err :=  fmt.Errorf("invalid input file extension %s", fromExt)
-		return err
+func keys(m map[string] bool) []string {
+	ks := []string{}
+	for k := range m {
+		ks = append(ks, k)
 	}
-	if !availFmt[toExt] {
-		err :=  fmt.Errorf("invalid input file extension %s", toExt)
-		return err
+	return ks
+}
+
+func chkAvailFmt(fromExt, toExt string) error {
+	var err error
+	if !availFmt[fromExt] || !availFmt[toExt]{
+		err =  fmt.Errorf("invalid file extension. supported format is " + strings.Join(keys(availFmt), " "))
 	}
 	if fromExt == toExt {
-		return errors.New("from and to ext should be different from each other")
+		err = errors.New("from and to flag value should be different from each other")
 	}
-	return nil
+	return err
 }
 
 func main() {
@@ -55,10 +60,7 @@ func main() {
 	errHandle(err)
 
 	filepath.Walk(*srcDir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
+		errHandle(err)
 
 		if info.IsDir() {
 			return nil
