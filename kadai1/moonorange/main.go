@@ -72,6 +72,8 @@ func main() {
 		img, format, err := image.Decode(file)
 		if availFmt[format] && err == nil {
 			err = converter.Do(*dstDir, *fromExt, *toExt, path, format, img)
+			// If you want to unwrap original error, uncomment the following line
+			// fmt.Println(errors.Unwrap(err))
 			errHandle(err)
 		}
 		return nil
