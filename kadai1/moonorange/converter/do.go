@@ -1,7 +1,6 @@
 package converter
 
 import (
-	"errors"
 	"fmt"
 	"image"
 	"image/jpeg"
@@ -28,8 +27,8 @@ func Do(dstDir, fromExt, toExt, path, format string, img image.Image) error {
 
 	switch toExt {
 	case "jpg":
-		if err := jpeg.Encode(newf, img,  nil); err == nil {
-			return errors.New("error test")
+		if err := jpeg.Encode(newf, img,  nil); err != nil {
+			return err
 		}
 	case "png":
 		err := png.Encode(newf, img)
