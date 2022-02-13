@@ -8,7 +8,6 @@ import (
 	_ "image/png"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"moonorange/converter"
 )
@@ -18,31 +17,6 @@ func errHandle(err error) {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 	}
-}
-
-var availFmt = map[string]bool {
-	"jpeg" : true,
-	"jpg" : true,
-	"png" : true,
-}
-
-func keys(m map[string] bool) []string {
-	ks := []string{}
-	for k := range m {
-		ks = append(ks, k)
-	}
-	return ks
-}
-
-func chkAvailFmt(fromExt, toExt string) error {
-	var err error
-	if !availFmt[fromExt] || !availFmt[toExt]{
-		err =  fmt.Errorf("invalid file extension. supported format is " + strings.Join(keys(availFmt), " "))
-	}
-	if fromExt == toExt {
-		err = fmt.Errorf("from and to flag value should be different from each other. from:%s to:%s", fromExt, toExt)
-	}
-	return err
 }
 
 func main() {
@@ -55,7 +29,7 @@ func main() {
 
 	// To parse the command line into the defined flags.
 	flag.Parse()
-	err := chkAvailFmt(*fromExt, *toExt)
+	_, err := converter.ChkAvailFmt(*fromExt, *toExt)
 	errHandle(err)
 
 	err = filepath.Walk(*srcDir, func(path string, info os.FileInfo, err error) error {
@@ -70,7 +44,7 @@ func main() {
 		defer file.Close()
 
 		img, format, err := image.Decode(file)
-		if availFmt[format] && err == nil {
+		if converter.AvailFmt[format] && err == nil {
 			err = converter.Do(*dstDir, *fromExt, *toExt, path, format, img)
 			// If you want to unwrap original error, uncomment the following line
 			// fmt.Println(errors.Unwrap(err))

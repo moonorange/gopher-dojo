@@ -7,7 +7,35 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
+	"strings"
+
+	"moonorange/dict"
 )
+
+var AvailFmt = map[string]bool {
+	"jpeg" : true,
+	"jpg" : true,
+	"png" : true,
+}
+
+func ChkAvailFmt(fromExt, toExt string) (bool, error) {
+	var err error
+	if !AvailFmt[fromExt] {
+		err =  fmt.Errorf("invalid file extension for fromExt. supported format is " + strings.Join(dict.Keys(AvailFmt), " "))
+		return false, err
+	}
+
+	if !AvailFmt[toExt] {
+		err =  fmt.Errorf("invalid file extension for toExt. supported format is " + strings.Join(dict.Keys(AvailFmt), " "))
+		return false, err
+	}
+
+	if fromExt == toExt {
+		err = fmt.Errorf("from and to flag value should be different from each other. from:%s to:%s", fromExt, toExt)
+		return false, err
+	}
+	return true, nil
+}
 
 func Do(dstDir, fromExt, toExt, path, format string, img image.Image) error {
 	if err := os.MkdirAll(dstDir, 0777); err != nil {
