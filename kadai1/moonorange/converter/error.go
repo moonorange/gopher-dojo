@@ -1,7 +1,11 @@
 package converter
 
 import (
+	"errors"
 	"fmt"
+	"strings"
+
+	"moonorange/dict"
 )
 
 type ErrCode string
@@ -11,6 +15,13 @@ var (
 	DirCreateFail 	  ErrCode = "cannot create directory"
 	FileCreateFail    ErrCode = "cannot create a file"
 	FileEncodeFail    ErrCode = "cannot encode a file"
+	InvalidFileExtCode ErrCode = "invalid file extension"
+	SameExtCode ErrCode = "from and to flag value should be different from each other"
+)
+
+var (
+	InvalidFileExtError error = fmt.Errorf("invalid file extension. supported format is " + strings.Join(dict.Keys(AvailFmt), " "))
+	SameExtError error = errors.New("from and to flag value should be different from each other.")
 )
 
 // Error type of converter

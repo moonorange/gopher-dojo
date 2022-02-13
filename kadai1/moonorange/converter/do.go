@@ -7,9 +7,6 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
-	"strings"
-
-	"moonorange/dict"
 )
 
 var AvailFmt = map[string]bool {
@@ -18,23 +15,23 @@ var AvailFmt = map[string]bool {
 	"png" : true,
 }
 
-func ChkAvailFmt(fromExt, toExt string) (bool, error) {
-	var err error
+func ChkAvailFmt(fromExt, toExt string) error {
 	if !AvailFmt[fromExt] {
-		err =  fmt.Errorf("invalid file extension for fromExt. supported format is " + strings.Join(dict.Keys(AvailFmt), " "))
-		return false, err
+		return &ConvError{Err: InvalidFileExtError, Code: InvalidFileExtCode, FilePath: ""}
 	}
 
 	if !AvailFmt[toExt] {
-		err =  fmt.Errorf("invalid file extension for toExt. supported format is " + strings.Join(dict.Keys(AvailFmt), " "))
-		return false, err
+		return &ConvError{Err: InvalidFileExtError, Code: InvalidFileExtCode, FilePath: ""}
 	}
 
 	if fromExt == toExt {
-		err = fmt.Errorf("from and to flag value should be different from each other. from:%s to:%s", fromExt, toExt)
-		return false, err
+		return &ConvError{Err: SameExtError, Code: SameExtCode, FilePath: ""}
 	}
-	return true, nil
+	return nil
+}
+
+func fnWithoutExt(fn string) string {
+	return fn[:len(fn)-len(filepath.Ext(fn))]
 }
 
 func Do(dstDir, fromExt, toExt, path, format string, img image.Image) error {
@@ -66,8 +63,4 @@ func Do(dstDir, fromExt, toExt, path, format string, img image.Image) error {
 		fmt.Println("Created", newfn)
 	}
 	return nil
-}
-
-func fnWithoutExt(fn string) string {
-	return fn[:len(fn)-len(filepath.Ext(fn))]
 }

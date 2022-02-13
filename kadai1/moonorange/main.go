@@ -29,7 +29,7 @@ func main() {
 
 	// To parse the command line into the defined flags.
 	flag.Parse()
-	_, err := converter.ChkAvailFmt(*fromExt, *toExt)
+	err := converter.ChkAvailFmt(*fromExt, *toExt)
 	errHandle(err)
 
 	err = filepath.Walk(*srcDir, func(path string, info os.FileInfo, err error) error {
